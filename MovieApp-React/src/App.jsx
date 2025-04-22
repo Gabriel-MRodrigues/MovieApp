@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Search from './components/search';
 import Spinner from './components/Spinner';
+import MovieCard from './components/MovieCard';
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -43,6 +44,7 @@ function App() {
       }
 
       setMovieList(data.results || []);
+      console.log(data.results);
     } catch (e) {
       console.error(`Error fetching movies: ${e}`);
       setErrorMessage(`Error fetching movies, please try again later...`);
@@ -79,11 +81,7 @@ function App() {
           ) : (
             <ul>
               {movieList.map((movie) => {
-                return (
-                  <p className="text-white" key={movie.id}>
-                    {movie.title}
-                  </p>
-                );
+                return <MovieCard key={movie.id} movie={movie} />;
               })}
             </ul>
           )}
