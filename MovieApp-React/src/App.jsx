@@ -1,7 +1,58 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Search from './components/search';
+
+const API_BASE_URL = 'https://api.themoviedb.org/3';
+
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+
+const API_OPTIONS = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${API_KEY}`,
+  },
+};
+
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [movieList, setMovieList] = useState([]);
+
+  const fetchMovies = async () => {
+    setErrorMessage('');
+    setIsLoading(true);
+
+    try {
+      const endPoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+
+      const res = await fetch(endPoint, API_OPTIONS);
+      if (!res.ok) {
+        throw new Error('Failed to fetch movies...');
+      }
+      const data = await res.json();
+
+      if (data.Response === 'false') {
+        setErrorMessage(data.Error || 'Failed to set movies...');
+        setMovieList([]);
+        return;
+      }
+
+      setMovieList(data.results || []);
+    } catch (e) {
+      console.error(`Error fetching movies: ${e}`);
+      setErrorMessage(`Error fetching movies, please try again later...`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMovies();
+  }, []);
   return (
     <main>
       <div className="pattern" />
@@ -13,10 +64,25 @@ function App() {
             Find <span className="text-gradient">Movies</span> You'll Enjoy
             Without the Hassle
           </h1>
+          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
-        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <section className="all-movies">
+          <h2>All Movies</h2>
+          {isLoading ? (
+            <p className="text-white">Loading...</p>
+          ) : errorMessage ? (
+            <p className="text-red-500">{errorMessage}</p>
+          ) : (
+            movieList.map((movie) => {
+              return (
+                <p className="text-white" key={movie.id}>
+                  {movie.title}
+                </p>
+              );
+            })
+          )}
+        </section>
       </div>
-      <h1 className="text-gradient">{searchTerm}</h1>
     </main>
   );
 }
