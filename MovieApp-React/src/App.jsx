@@ -54,6 +54,7 @@ function App() {
   useEffect(() => {
     fetchMovies();
   }, []);
+
   return (
     <main>
       <div className="pattern" />
@@ -67,20 +68,24 @@ function App() {
           </h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
+
         <section className="all-movies">
-          <h2>All Movies</h2>
+          <h2 className="mt-[40px]">All Movies</h2>
+
           {isLoading ? (
             <Spinner />
           ) : errorMessage ? (
             <p className="text-red-500">{errorMessage}</p>
           ) : (
-            movieList.map((movie) => {
-              return (
-                <p className="text-white" key={movie.id}>
-                  {movie.title}
-                </p>
-              );
-            })
+            <ul>
+              {movieList.map((movie) => {
+                return (
+                  <p className="text-white" key={movie.id}>
+                    {movie.title}
+                  </p>
+                );
+              })}
+            </ul>
           )}
         </section>
       </div>
