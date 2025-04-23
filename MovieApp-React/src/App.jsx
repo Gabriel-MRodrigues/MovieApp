@@ -32,6 +32,8 @@ function App() {
   const debouncedSearchTerm = debounceSearchTerm(searchTerm, 1000);
 
   const [trendingMovies, setTrendingMovies] = useState([]);
+  const [trendingErrorMessage, setTrendingErrorMessage] = useState('');
+  const [isTrendingLoading, setIsTrendingLoading] = useState(false);
 
   const fetchMovies = async (query = '') => {
     setErrorMessage('');
@@ -69,12 +71,18 @@ function App() {
   };
 
   const loadTrendingMovies = async () => {
+    setTrendingErrorMessage('');
+    setIsTrendingLoading(true);
+
     try {
       const movies = await getTrendingMovies();
       setTrendingMovies(movies);
       console.log(movies);
     } catch (e) {
       console.error(`Error fetching trending movies: ${e}`);
+      setTrendingErrorMessage('Error fetching trending movies...');
+    } finally {
+      setIsTrendingLoading(false);
     }
   };
 
@@ -100,20 +108,28 @@ function App() {
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
 
-        {trendingMovies.length > 0 && (
-          <section className="trending">
-            <h2>Trending Movies</h2>
-            <ul>
-              {trendingMovies.map((movie, index) => {
-                return (
-                  <li key={movie.$id}>
-                    <p>{index + 1}</p>
-                    <img src={movie.poster_url} alt={movie.title} />
-                  </li>
-                );
-              })}
-            </ul>
-          </section>
+        {isTrendingLoading ? (
+          <Spinner />
+        ) : trendingErrorMessage ? (
+          <p className="text-red-500 m-[40px] text-center">
+            {trendingErrorMessage}
+          </p>
+        ) : (
+          trendingMovies.length > 0 && (
+            <section className="trending">
+              <h2>Trending Movies</h2>
+              <ul>
+                {trendingMovies.map((movie, index) => {
+                  return (
+                    <li key={movie.$id}>
+                      <p>{index + 1}</p>
+                      <img src={movie.poster_url} alt={movie.title} />
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )
         )}
 
         <section className="all-movies">
@@ -122,7 +138,11 @@ function App() {
           {isLoading ? (
             <Spinner />
           ) : errorMessage ? (
-            <p className="text-red-500">{errorMessage}</p>
+            <p className="text-red-500 m-[40px] text-center">{errorMessage}</p>
+          ) : movieList.length === 0 ? (
+            <p className="text-red-500 m-[40px] text-center">
+              Searched movie title not found...
+            </p>
           ) : (
             <ul>
               {movieList.map((movie) => {
