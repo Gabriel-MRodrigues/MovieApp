@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
+
 import Search from './components/search';
 import Spinner from './components/Spinner';
 import MovieCard from './components/MovieCard';
+
 import { getTrendingMovies, updateSearchCount } from './appwrite';
+
+import { debounceSearchTerm } from './debounceFunc';
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -17,25 +21,10 @@ const API_OPTIONS = {
 };
 
 // debounce function
-const debounceSearchTerm = (value, delay) => {
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(value);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [value, delay]);
-
-  return debouncedSearchTerm;
-};
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
-
   const [errorMessage, setErrorMessage] = useState('');
-
   const [isLoading, setIsLoading] = useState(false);
 
   const [movieList, setMovieList] = useState([]);
