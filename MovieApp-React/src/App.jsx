@@ -15,6 +15,21 @@ const API_OPTIONS = {
   },
 };
 
+// debounce function
+const debounceSearchTerm = (value, delay) => {
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(value);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+
+  return debouncedSearchTerm;
+};
+
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -24,12 +39,16 @@ function App() {
 
   const [movieList, setMovieList] = useState([]);
 
-  const fetchMovies = async () => {
+  const debouncedSearchTerm = debounceSearchTerm(searchTerm, 500);
+
+  const fetchMovies = async (query = '') => {
     setErrorMessage('');
     setIsLoading(true);
 
     try {
-      const endPoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+      const endPoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
       const res = await fetch(endPoint, API_OPTIONS);
       if (!res.ok) {
@@ -54,8 +73,8 @@ function App() {
   };
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
 
   return (
     <main>
