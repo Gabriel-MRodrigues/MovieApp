@@ -1,5 +1,6 @@
 import React from 'react';
 
+// spinner html got from https://flowbite.com/docs/components/spinner/
 const Spinner = () => {
   return (
     <div role="status">

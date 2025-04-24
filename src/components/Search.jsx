@@ -1,3 +1,5 @@
+// the Search component receives a searchTerm and a setSearchTerm function as parameters
+// it then sets the searchTerm to whatever the user types in the input field.
 const Search = ({ searchTerm, setSearchTerm }) => {
   return (
     <div className="search">
