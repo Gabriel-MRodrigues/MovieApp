@@ -1,12 +1,19 @@
-# React + Vite
+# Movie App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern movie discovery app built using the TMDB API. Users can search for movies, explore trending titles, and view some detailed information about each film such as rating, title, poster, language and release year — all within a clean and user-friendly interface.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Search Movies: Find movies by title using the TMDB API.
+- Trending Section: Automatically displays the most searched movies by users in real time.
+- Search Tracking Database: Tracks and stores user search counts in a lightweight database (appwrite) to power the trending section.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React
+- Database: AppWrite
+- API: TMDB (The Movie Database)
+
+## How Trending Section Works
+
+Each time a user searches for a movie, the app stores that search count in a local database. These counts are aggregated to display the top searched movies in the Trending section, helping users discover what others are watching/searching.
