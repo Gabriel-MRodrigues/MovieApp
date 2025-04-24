@@ -17,3 +17,12 @@ A modern movie discovery app built using the TMDB API. Users can search for movi
 ## How Trending Section Works
 
 Each time a user searches for a movie, the app stores that search count in a local database. These counts are aggregated to display the top searched movies in the Trending section, helping users discover what others are watching/searching.
+
+## Movie App Screenshots
+
+**Header with search bar**
+![App Header Screenshot](src/assets/header.png)
+**Trending movies section**
+![App Trending Movies Section](src/assets/trendingMovies.png)
+**All movies section**
+![App All Movies Section](src/assets/allMovies.png)
